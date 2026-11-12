@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Healthcare Communication Academy</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f7fa;--card:#fff;--tx:#14213d;--mut:#5b6b82;--ac:#0b6fc2;--ac2:#e8f2fc;--ok:#18794e;--okb:#e3f6ec;--bad:#b3261e;--badb:#fdeceb;--bd:#d7e0ea}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1722;--card:#18222f;--tx:#e8eef5;--mut:#9fb0c4;--ac:#5aaef5;--ac2:#1d2f44;--ok:#5fd09a;--okb:#14301f;--bad:#ff8a80;--badb:#3a1c1a;--bd:#2c3a4b}}
+:root[data-theme="dark"]{--bg:#0f1722;--card:#18222f;--tx:#e8eef5;--mut:#9fb0c4;--ac:#5aaef5;--ac2:#1d2f44;--ok:#5fd09a;--okb:#14301f;--bad:#ff8a80;--badb:#3a1c1a;--bd:#2c3a4b}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:20px 16px 8px;max-width:820px;margin:auto}
+h1{font-size:22px;margin:0 0 2px}header p{margin:0;color:var(--mut);font-size:14px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:820px;margin:auto}
+nav button{flex:none;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px;border-radius:20px;font:inherit;font-size:14px;cursor:pointer}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{max-width:820px;margin:auto;padding:8px 16px 40px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:12px 0}
+.card h3{margin:0 0 8px;font-size:17px}.card p{margin:6px 0}
+.tag{display:inline-block;background:var(--ac2);color:var(--ac);font-size:12px;padding:2px 9px;border-radius:10px;margin-bottom:6px}
+.say{border-left:3px solid var(--ac);background:var(--ac2);padding:8px 12px;margin:8px 0;border-radius:0 8px 8px 0;font-style:italic}
+ul{padding-left:20px;margin:6px 0}li{margin:3px 0}
+button.opt{display:block;width:100%;text-align:left;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:11px 13px;border-radius:10px;margin:7px 0;font:inherit;cursor:pointer}
+button.opt.right{background:var(--okb);border-color:var(--ok)}button.opt.wrong{background:var(--badb);border-color:var(--bad)}
+.fb{margin-top:8px;font-size:14.5px;color:var(--mut)}
+.btn{background:var(--ac);color:#fff;border:0;padding:10px 18px;border-radius:10px;font:inherit;cursor:pointer;margin-top:8px}
+.bar{height:8px;background:var(--bd);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+details{border-top:1px solid var(--bd);padding:8px 0}summary{cursor:pointer;font-weight:600}
+a{color:var(--ac)}small,.mut{color:var(--mut)}
+.step{display:flex;gap:10px;margin:8px 0}.step b{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-size:13px}
+</style></head><body>
+<header><h1>Healthcare Communication Academy</h1>
+<p>Create your moment of magic · built from the “Healthcare Communication” training deck + 2026 journal updates</p>
+<div class="bar" style="margin-top:10px"><i id="pb"></i></div><small id="pt" class="mut"></small></header>
+<nav id="nav"></nav><main id="m"></main>
+<script>
+const $=s=>document.querySelector(s);
+let store={};try{store=JSON.parse(localStorage.getItem("hca")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("hca",JSON.stringify(store))}catch(e){}}
+store.done=store.done||{};
+
+const LESSONS=[
+{t:"Why communication matters",tag:"Foundations",b:`<p>Every contact is a chance to create a moment of magic or a moment of misery. Communication is the key, and it can be acquired; it is not inherited.</p>
+<ul><li>Doctors identify problems more accurately</li><li>Patients understand more, are more satisfied and adhere better to treatment and behaviour advice</li><li>Patient distress, anxiety and depression are lessened; doctors’ own wellbeing improves</li><li>Practice benefits: smoother flow, fewer conflicts, less wasted time</li></ul>
+<p class="mut">Source in deck: Maguire P, Pitceathly C. Key communication skills and how to acquire them. BMJ 2002;325:697.</p>`},
+{t:"Verbal, non-verbal, paraverbal",tag:"Foundations",b:`<ul><li><b>Verbal</b>: content and word choice: nature, course and prognosis, options, cost and yield of tests, risks and benefits of procedures</li><li><b>Non-verbal</b>: posture, gesture, facial expression, spatial distance</li><li><b>Paraverbal</b>: tone, pitch, pacing, volume</li></ul>
+<p>The deck cites the popular “10% words / 90% delivery” idea. Treat the exact figures as a memorable rule of thumb about how much delivery matters, not a precise measurement. In conflict, tone often does more damage than the disagreement itself.</p>`},
+{t:"Empathy: what and why",tag:"Empathy",b:`<p>Empathy in patient care has three parts (Hojat): <b>understanding</b> the patient’s pain, experience and views; the capacity to <b>communicate</b> that understanding; and an <b>intention to help</b>.</p>
+<ul><li>Empathic doctors ease stress; relaxation is linked to less pain, anxiety and depression</li><li>Higher satisfaction correlates with safer, better outcomes</li><li>Highly empathic doctors report better wellbeing and may face fewer complaints</li></ul>
+<div class="say">“It is more important to know what sort of person has a disease than what sort of disease a person has.” (attributed to Hippocrates)</div>
+<p><b>Ways to build empathy:</b> theatre training, virtual-reality experience of conditions such as arthritis or macular degeneration, and street-clinic work.</p>`},
+{t:"Practical empathy and body language",tag:"Skills",b:`<div class="step"><b>1</b><div><b>Listen first.</b> Open with “How are you doing?” and let them speak.</div></div>
+<div class="step"><b>2</b><div><b>Express care and concern.</b> Say you are concerned about their wellbeing.</div></div>
+<div class="step"><b>3</b><div><b>Understand before persuading.</b> If a patient resists effective treatment, don’t open with a lecture; find where they are coming from.</div></div>
+<div class="step"><b>4</b><div><b>Take interest in their life:</b> family, work, hobbies.</div></div>
+<p><b>Body language:</b> sit down, make eye contact (if culturally appropriate), smile, allow silence.</p>`},
+{t:"Prepare for the discussion",tag:"Skills",b:`<ul><li>Make sure the clinical facts are correct; read the records or speak to the relevant person first</li><li>Know the extent of disease, comorbidities and current treatment options</li><li>Find out what other professionals have already told the patient so your information is consistent</li></ul>`},
+{t:"Barriers to communication",tag:"Skills",b:`<ul><li>Offering advice and reassurance before the main problems are identified</li><li>Explaining away distress as normal</li><li>Attending to physical aspects only</li><li>Switching the topic</li><li>“Jollying” patients along</li></ul>
+<p><b>Fix:</b> use open questions, reflect (“If I’ve heard you right, you seem to be saying…”), and name the emotion before you reassure.</p>`},
+{t:"Prognosis and end-of-life",tag:"Hard talks",b:`<p>Prognosis is a core compassionate skill. The first challenge is unavoidable uncertainty.</p>
+<ul><li>Build rapport, sit close, allow silence</li><li>Check understanding first: “What is your understanding of your health situation and what is likely to happen?”</li><li>Always allow the option not to discuss; revisit when the situation changes</li><li>Involve the proxy decision-maker; raise advance care planning early</li></ul>
+<div class="say">“Some people are worried about things that may or may not happen in the future. It can help to talk about this.”</div>
+<div class="say">“We cannot promise that you will have no pain. However, we can control almost all of the pain almost all of the time.”</div>
+<div class="say">“You will not be abandoned.”</div>
+<p>Be honest and avoid unrealistic promises (for example, that dyspnoea can always be controlled). Emphasise available support such as the palliative care team, and explore the patient’s hopes and goals.</p>`},
+{t:"Conflict: a step-wise approach",tag:"Hard talks",b:`<p>Conflict is inevitable; how you respond is the pivot. Habitual withdrawal means you aren’t giving your best; needing to win every time breeds resentment.</p>
+<div class="step"><b>1</b><div><b>Notice it</b> in yourself (irritation, boredom) or others (eye-rolling).</div></div>
+<div class="step"><b>2</b><div><b>Prepare:</b> “Am I too angry to listen? What do I need to know?”</div></div>
+<div class="step"><b>3</b><div><b>Non-judgemental start:</b> “Let’s start with the big picture, what we are hoping for.”</div></div>
+<div class="step"><b>4</b><div><b>Reframe</b> charged issues as shared interests: “We are both interested in the patient’s wellbeing.”</div></div>
+<div class="step"><b>5</b><div><b>Respond empathetically:</b> “I know you would never want to feel you were starving your mother.”</div></div>
+<div class="step"><b>6</b><div><b>Options</b> that meet both parties’ needs: list, then pros and cons.</div></div>
+<div class="step"><b>7</b><div><b>Get help</b> if there is no agreement; sometimes you agree to disagree.</div></div>`}
+];
+
+const PHRASES=[
+["Opening","How are you doing?","Open question that invites feelings"],
+["Active listening","If I’ve heard you right, you seem to be saying…","Reflects and checks understanding"],
+["Empathy","This has been a tough time for you and your family, and you have faced it with great courage.","Validates before information"],
+["Prognosis","What is your understanding of your health situation and what is likely to happen?","Assess before telling"],
+["Prognosis","Would you like to hear this now or later? You can always ask me.","Offers control and a choice"],
+["Hope & coping","The aim of treatment is changing towards maximising your function and comfort.","Reframes goals honestly"],
+["Symptoms","We can get on top of pain in most cases.","Reassure without over-promising"],
+["Advance care","Have you thought about the care you would want if you became too sick to speak for yourself?","Starts ACP gently"],
+["Conflict","Tell me your perspective on this.","Listen to their story first"],
+["Conflict","It seems to me we are both interested in the patient’s wellbeing.","Shared interest"],
+["Escalation","I think it would help to have another impartial person help us decide what is best.","Step 7: get help"]
+];
+
+const QUIZ=[
+{q:"A patient says “I’m just so tired of all this.” Which response best shows empathy?",o:["“Don’t worry, lots of people feel that way.”","“That sounds exhausting. Can you tell me more about what the last few weeks have been like?”","“Let’s review your lab results.”","“You need to stay positive.”"],a:1,e:"Naming the emotion and inviting more is empathic listening. Options A, C and D are listed barriers: explaining distress away, physical focus only, and jollying along."},
+{q:"Before breaking significant news, what should you do first?",o:["Give the full diagnosis quickly","Ask what the patient already understands","Offer reassurance","Change the subject if they look upset"],a:1,e:"Use open directive questions to clarify understanding before giving new information."},
+{q:"Which is NOT one of the three components of empathy described by Hojat?",o:["Understanding the patient’s experience","Communicating that understanding","An intention to help","Agreeing with every request"],a:3,e:"Empathy is understanding, communicating, and intending to help. It doesn’t require agreeing with every demand."},
+{q:"Paraverbal communication includes:",o:["Posture and gesture","Tone, pitch, pacing and volume","Choice of medical terms","Spatial distance"],a:1,e:"Posture, gesture and distance are non-verbal; the voice qualities are paraverbal."},
+{q:"A dying patient asks if they will be in pain. The best answer is:",o:["“You will have no pain at all.”","“Let’s not talk about that.”","“We have many ways to control pain, and we can control almost all of it almost all of the time.”","“Everyone suffers at the end.”"],a:2,e:"Reassure that pain can be controlled in most people but avoid unrealistic promises."},
+{q:"A family is angry because you stopped IV fluids in the last days of life. Which step comes first in the conflict approach?",o:["Prove your clinical reasoning","Notice and prepare yourself, then find a non-judgemental starting point","Refer to the ethics committee","Ask them to leave"],a:1,e:"Steps 1–3 are internal readiness and a non-attacking opener, before reframing or negotiating."},
+{q:"A patient declines to discuss prognosis today. You should:",o:["Insist, since it is important","Respect this and revisit when the condition or situation changes","Tell the family instead without asking","Never raise it again"],a:1,e:"Always give the option to defer, and raise it again when circumstances change."},
+{q:"When is it appropriate to involve a third party in conflict?",o:["Never","At the first disagreement","When no satisfactory agreement can be reached","Only after a complaint"],a:2,e:"Step 7: if agreement can’t be reached, get help, such as an impartial colleague."}
+];
+
+const CASES=[
+{s:"Mr Rao, 58, has just been told his heart failure is advanced. He is silent and looking at the floor. You have 10 minutes.",o:[["“I know this is a lot. Take a moment; I’m here. What is going through your mind?”",2,"Allows silence, acknowledges emotion, invites him to speak."],["“Let’s go through the medication list now so we use our time well.”",0,"Moves to the physical and task-focused too soon."],["“Many patients do well with treatment, so try not to worry.”",0,"Premature reassurance before concerns are heard."]]},
+{s:"A daughter insists her mother with end-stage disease must be given ‘full treatment’ and accuses the team of giving up.",o:[["“The decision is final; the team has agreed.”",0,"Closes the conversation and escalates conflict."],["“I can hear how much you love her. Could you tell me what you are most hoping for? I want us both to be working for her comfort and wellbeing.”",2,"Responds empathetically, listens first, and reframes as a shared interest."],["“I understand, but you’re not a doctor.”",0,"Judgemental and dismissive."]]},
+{s:"A patient with proven benefit from statins refuses them, saying ‘pills ruin people’.",o:[["Begin a detailed lecture on cardiovascular risk statistics.",0,"The deck warns against opening with a persuasion lecture."],["“Help me understand what worries you about these tablets.”",2,"Explores the patient’s perspective before persuading."],["“Fine, then. It’s your funeral.”",0,"Withdrawal and hostility; both damage trust."]]}
+];
+
+const PAPERS=[
+{j:"BMJ Open 2026;16:e115891",t:"Challenging history-taking encounters: a systematic review, meta-analysis and phenomenological framework",d:"Hossain, Murray, Zhang et al. All physicians meet encounters where communication breaks down; the review builds a framework for them and notes that good generic skills (open questions, relaxed frame, empathy, reflecting) remain the foundation.",u:"https://doi.org/10.1136/bmjopen-2025-115891",l:"Apply: use when a consultation stalls or turns difficult."},
+{j:"Br J Hosp Med 2026;87(3):51729",t:"Communication tips for internists managing distress on the ward",d:"Open access, March 2026. Suggests function-first questioning to uncover panic, insomnia or demoralisation, and eliciting the patient’s explanatory model in about 30 seconds.",u:"https://doi.org/10.31083/BJHM51729",l:"Apply: ask “What do you think is going on?” early in the encounter."},
+{j:"BMJ, 2 May 2026 (news-analysis summary)",t:"Beyond not controlling the narrative: it’s about being human",d:"A summary page reports that doctors often dominate consultations, that empathy is linked to less pain and anxiety, and that listening first helps diagnosis and adherence. Check the original BMJ piece before citing.",u:"https://www.pulse.bot/healthcare/news/beyond-not-controlling-the-narrative-its-about-being-human-dafb73bd-4810-4f15-bec6-c83ab44d4f75/",l:"Apply: let the patient finish their opening statement."},
+{j:"BMJ Open 2022;12:e049258",t:"Let’s Talk About Antibiotics: randomised trial of two interventions to reduce antibiotic misuse",d:"Goggin et al. Compared 20 minutes of clinical education alone with the same plus 50 minutes of communication skills training for clinicians.",u:"https://doi.org/10.1136/bmjopen-2021-049258",l:"Apply: communication training is itself a clinical intervention."},
+{j:"BMJ 2023;383:2935",t:"Better doctor-patient relationships start with the small things",d:"Yan & Li. BMJ editorial on how small everyday behaviours shape the doctor-patient relationship. No abstract available.",u:"https://doi.org/10.1136/bmj.p2935",l:"Apply: sit down, greet by name, explain what you are doing."},
+{j:"Medical education review, Feb 2026",t:"Medical students’ ability to communicate bad news: a literature review",d:"An integrative review concluding that medical education worldwide shares a concern for developing strong communication skills in students.",u:"https://revistas.usp.br/revistadc/article/view/224177",l:"Apply: rehearse bad-news conversations with feedback."},
+{j:"ACEP Now, 2026",t:"The evidence for empathy in the emergency department",d:"Argues empathic communication matters to each patient even under time pressure; cites systematic reviews on physician empathy and malpractice claims.",u:"https://www.acepnow.com/article/the-evidence-for-empathy-in-the-emergency-department/2",l:"Apply: one empathic sentence costs seconds."},
+{j:"BMJ 2002;325:697",t:"Key communication skills and how to acquire them (from the deck)",d:"Maguire & Pitceathly. Effective training needs cognitive input, modelling, and practice with constructive feedback.",u:"https://doi.org/10.1136/bmj.325.7366.697",l:"Apply: practise, don’t just read."}
+];
+
+const TABS=["Learn","Phrases","Quiz","Practice","Journal watch","My plan"];
+let tab=0;
+function nav(){$("#nav").innerHTML=TABS.map((t,i)=>`<button class="${i==tab?"on":""}" onclick="go(${i})">${t}</button>`).join("")}
+function go(i){tab=i;nav();[learn,phr,quiz,prac,papers,plan][i]();scrollTo(0,0)}
+function prog(){const n=Object.keys(store.done).length,tot=LESSONS.length+QUIZ.length+CASES.length;
+$("#pb").style.width=Math.round(100*n/tot)+"%";$("#pt").textContent=n+" of "+tot+" activities completed"}
+
+function learn(){$("#m").innerHTML=LESSONS.map((l,i)=>`<div class="card"><span class="tag">${l.tag}</span><h3>${l.t}</h3>${l.b}
+<button class="btn" onclick="mark('l${i}',this)">${store.done["l"+i]?"✓ Completed":"Mark as learned"}</button></div>`).join("");prog()}
+function mark(k,b){store.done[k]=1;save();b.textContent="✓ Completed";prog()}
+
+function phr(){$("#m").innerHTML=`<div class="card"><small class="mut">Phrases adapted from the deck’s prognosis and conflict tables. Tap a group to expand.</small></div>`+
+[...new Set(PHRASES.map(p=>p[0]))].map(g=>`<div class="card"><h3>${g}</h3>`+PHRASES.filter(p=>p[0]==g).map(p=>`<div class="say">“${p[1]}”</div><small class="mut">${p[2]}</small>`).join("")+`</div>`).join("");prog()}
+
+function quiz(){let i=0,sc=0;const m=$("#m");
+function show(){if(i>=QUIZ.length){m.innerHTML=`<div class="card"><h3>Quiz complete</h3><p>Score: <b>${sc}/${QUIZ.length}</b></p><button class="btn" onclick="go(2)">Retake</button></div>`;return}
+const q=QUIZ[i];m.innerHTML=`<div class="card"><span class="tag">Question ${i+1} of ${QUIZ.length}</span><h3>${q.q}</h3>`+q.o.map((o,j)=>`<button class="opt" data-j="${j}">${o}</button>`).join("")+`<div class="fb" id="fb"></div></div>`;
+m.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const j=+b.dataset.j;m.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+m.querySelectorAll(".opt")[q.a].classList.add("right");if(j!=q.a)b.classList.add("wrong");else sc++;
+$("#fb").innerHTML=q.e+`<br><button class="btn" id="nx">Next</button>`;store.done["q"+i]=1;save();prog();$("#nx").onclick=()=>{i++;show()}})}
+show()}
+
+function prac(){let i=0;const m=$("#m");
+function show(){if(i>=CASES.length){m.innerHTML=`<div class="card"><h3>Practice complete</h3><p>Try them again and notice which instincts pull you toward reassurance or lecturing.</p><button class="btn" onclick="go(3)">Restart</button></div>`;return}
+const c=CASES[i];m.innerHTML=`<div class="card"><span class="tag">Scenario ${i+1} of ${CASES.length}</span><p>${c.s}</p><p><b>What do you say?</b></p>`+c.o.map((o,j)=>`<button class="opt" data-j="${j}">${o[0]}</button>`).join("")+`<div class="fb" id="fb"></div></div>`;
+m.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const o=c.o[+b.dataset.j];m.querySelectorAll(".opt").forEach((x,k)=>{x.disabled=true;if(c.o[k][1]==2)x.classList.add("right")});if(o[1]!=2)b.classList.add("wrong");
+$("#fb").innerHTML=o[2]+`<br><button class="btn" id="nx">Next</button>`;store.done["c"+i]=1;save();prog();$("#nx").onclick=()=>{i++;show()}})}
+show()}
+
+function papers(){$("#m").innerHTML=`<div class="card"><small class="mut">Articles found by a web search on 12 Nov 2026. Always open the original before citing. Ask Claude to refresh this list for newer papers.</small></div>`+
+PAPERS.map(p=>`<div class="card"><span class="tag">${p.j}</span><h3>${p.t}</h3><p>${p.d}</p><p><b>${p.l}</b></p><a href="${p.u}" target="_blank" rel="noopener">Open source ↗</a></div>`).join("");prog()}
+
+function plan(){const f=["I have sufficient knowledge in communicating with patients and their families","I intend to change my practice with better communication skills","I find this programme useful","I want to attend more CME on communication"];
+store.fb=store.fb||{};
+$("#m").innerHTML=`<div class="card"><h3>Feedback (from the deck’s form)</h3><p class="mut">Rate 1 (disagree) to 5 (agree).</p>`+f.map((t,i)=>`<p>${t}<br>`+[1,2,3,4,5].map(n=>`<button class="opt" style="display:inline-block;width:auto;padding:6px 12px" onclick="rate(${i},${n},this)" ${store.fb[i]==n?'style="font-weight:700"':''}>${store.fb[i]==n?"● ":""}${n}</button>`).join(" ")+`</p>`).join("")+`</div>
+<div class="card"><h3>My commitment</h3><p class="mut">One thing I will do differently in my next clinic:</p><textarea id="cm" rows="3" style="width:100%;font:inherit;padding:8px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)">${store.cm||""}</textarea><button class="btn" onclick="store.cm=$('#cm').value;save();this.textContent='Saved ✓'">Save</button></div>`;prog()}
+function rate(i,n,b){store.fb[i]=n;save();plan()}
+nav();learn();
+</script></body></html>
